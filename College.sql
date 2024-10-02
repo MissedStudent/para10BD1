@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 01 2024 г., 12:48
--- Версия сервера: 8.0.30
--- Версия PHP: 8.0.22
+-- Время создания: Окт 02 2024 г., 11:56
+-- Версия сервера: 8.0.24
+-- Версия PHP: 8.0.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `College`
+-- База данных: `college`
 --
 
 -- --------------------------------------------------------
@@ -29,16 +29,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `discipline` (
   `id_discipline` int NOT NULL,
-  `discipline_name` text COLLATE utf8mb4_general_ci NOT NULL
+  `discipline_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `discipline_id_teacher` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `discipline`
 --
 
-INSERT INTO `discipline` (`id_discipline`, `discipline_name`) VALUES
-(1, 'Java'),
-(2, 'ТИС');
+INSERT INTO `discipline` (`id_discipline`, `discipline_name`, `discipline_id_teacher`) VALUES
+(1, 'Java', 1),
+(2, 'ТИС', 1);
 
 -- --------------------------------------------------------
 
@@ -48,17 +49,22 @@ INSERT INTO `discipline` (`id_discipline`, `discipline_name`) VALUES
 
 CREATE TABLE `grades` (
   `id_grades` int NOT NULL,
-  `grades` int NOT NULL
+  `grades` int NOT NULL,
+  `grades_id_students` int NOT NULL,
+  `grades_id_discipline` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `grades`
 --
 
-INSERT INTO `grades` (`id_grades`, `grades`) VALUES
-(1, 5),
-(2, 3),
-(3, 4);
+INSERT INTO `grades` (`id_grades`, `grades`, `grades_id_students`, `grades_id_discipline`) VALUES
+(1, 5, 1, 1),
+(2, 3, 2, 2),
+(3, 4, 3, 1),
+(4, 4, 2, 2),
+(5, 5, 3, 1),
+(6, 4, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -68,7 +74,7 @@ INSERT INTO `grades` (`id_grades`, `grades`) VALUES
 
 CREATE TABLE `groups` (
   `id_group` int NOT NULL,
-  `group_name` text COLLATE utf8mb4_general_ci NOT NULL
+  `group_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -94,6 +100,14 @@ CREATE TABLE `record` (
   `teacher_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Дамп данных таблицы `record`
+--
+
+INSERT INTO `record` (`id_record`, `student_id`, `discipline_id`, `id_grades`, `data`, `teacher_id`) VALUES
+(1, 1, 1, 1, '2024-10-02 08:33:02', 1),
+(2, 1, 2, 6, '2024-10-02 08:33:02', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -102,9 +116,9 @@ CREATE TABLE `record` (
 
 CREATE TABLE `students` (
   `id_student` int NOT NULL,
-  `student_surname` text COLLATE utf8mb4_general_ci NOT NULL,
-  `student_name` text COLLATE utf8mb4_general_ci NOT NULL,
-  `student_lastname` text COLLATE utf8mb4_general_ci NOT NULL,
+  `student_surname` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `student_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `student_lastname` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `student_group_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -125,9 +139,9 @@ INSERT INTO `students` (`id_student`, `student_surname`, `student_name`, `studen
 
 CREATE TABLE `teacher` (
   `id_teacher` int NOT NULL,
-  `teacher_surname` text COLLATE utf8mb4_general_ci NOT NULL,
-  `teacher_name` text COLLATE utf8mb4_general_ci NOT NULL,
-  `teacher_lastname` text COLLATE utf8mb4_general_ci NOT NULL
+  `teacher_surname` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `teacher_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `teacher_lastname` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -191,7 +205,7 @@ ALTER TABLE `discipline`
 -- AUTO_INCREMENT для таблицы `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id_grades` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_grades` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT для таблицы `groups`
@@ -203,7 +217,7 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT для таблицы `record`
 --
 ALTER TABLE `record`
-  MODIFY `id_record` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id_record` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `students`
